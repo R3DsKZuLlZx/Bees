@@ -1,0 +1,51 @@
+﻿@page "/"
+@using Bees.Blazor.Models
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Bee Simulator</h1>
+
+<table class="table">
+    <tr>
+        <th>Index</th>    
+        <th>Type</th>    
+        <th>Health</th>    
+        <th>Status</th>    
+        <th>Actions</th>    
+    </tr>
+    @foreach (var bee in _beesList)
+    {
+        <tr>
+            <td>@_beesList.IndexOf(bee)</td>
+            <td>@bee.GetType().Name</td>
+            <td>@bee.Health</td>
+            <td>@(bee.IsDead ? "Dead" : "Alive")</td>
+            <td>
+                <button class="btn btn-outline-primary" @onclick="() => bee.Damage(_random.Next(0, 80))">Damage</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+@code {
+
+    private readonly Random _random = new();
+    private readonly List<Bee> _beesList = [];
+    
+    protected override void OnInitialized()
+    {
+        for (var i = 0; i < 10; i++)
+        {
+            var drone = new DroneBee();
+            _beesList.Add(drone);
+    
+            var worker = new WorkerBee();
+            _beesList.Add(worker);
+    
+            var queen = new QueenBee();
+            _beesList.Add(queen);
+        }
+    }
+}
